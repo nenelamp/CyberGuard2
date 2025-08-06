@@ -8,12 +8,19 @@ import AdminDashboard from './components/AdminDashboard';
 import TrainingModule from './components/TrainingModule';
 import PhishingSimulation from './components/PhishingSimulation';
 import RiskAssessment from './components/RiskAssessment';
+import { BankingPhishingSimulator, ITSupportPhishingSimulator, SocialMediaPhishingSimulator, CEOFraudPhishingSimulator } from './components/phishing-simulator';
 
-type ViewType = 'landing' | 'login' | 'signup' | 'employee' | 'admin' | 'training' | 'phishing' | 'risk';
+type ViewType = 'landing' | 'login' | 'signup' | 'employee' | 'admin' | 'training' | 'phishing' | 'risk' | 'banking-simulator' | 'it-support-simulator' | 'social-media-simulator' | 'ceo-fraud-simulator';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewType>('landing');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleNavigate = (view: string) => {
+    if (view === 'landing' || view === 'login' || view === 'signup' || view === 'employee' || view === 'admin' || view === 'training' || view === 'phishing' || view === 'risk' || view === 'banking-simulator' || view === 'it-support-simulator' || view === 'social-media-simulator' || view === 'ceo-fraud-simulator') {
+      setCurrentView(view as ViewType);
+    }
+  };
 
   const navigationItems = [
     { id: 'employee', label: 'Employee Dashboard', icon: Users },
@@ -26,23 +33,31 @@ function App() {
   const renderCurrentView = () => {
     switch (currentView) {
       case 'landing':
-        return <LandingPage onNavigate={setCurrentView} />;
+        return <LandingPage onNavigate={handleNavigate} />;
       case 'login':
-        return <LoginPage onNavigate={setCurrentView} />;
+        return <LoginPage onNavigate={handleNavigate} />;
       case 'signup':
-        return <SignupPage onNavigate={setCurrentView} />;
+        return <SignupPage onNavigate={handleNavigate} />;
       case 'employee':
-        return <EmployeeDashboard onNavigate={setCurrentView} />;
+        return <EmployeeDashboard onNavigate={handleNavigate} />;
       case 'admin':
-        return <AdminDashboard onNavigate={setCurrentView} />;
+        return <AdminDashboard onNavigate={handleNavigate} />;
       case 'training':
-        return <TrainingModule onNavigate={setCurrentView} />;
+        return <TrainingModule onNavigate={handleNavigate} />;
       case 'phishing':
-        return <PhishingSimulation onNavigate={setCurrentView} />;
+        return <PhishingSimulation onNavigate={handleNavigate} />;
       case 'risk':
-        return <RiskAssessment onNavigate={setCurrentView} />;
+        return <RiskAssessment onNavigate={handleNavigate} />;
+      case 'banking-simulator':
+        return <BankingPhishingSimulator onComplete={() => setCurrentView('phishing')} onExit={() => setCurrentView('phishing')} />;
+      case 'it-support-simulator':
+        return <ITSupportPhishingSimulator onComplete={() => setCurrentView('phishing')} onExit={() => setCurrentView('phishing')} />;
+      case 'social-media-simulator':
+        return <SocialMediaPhishingSimulator onComplete={() => setCurrentView('phishing')} onExit={() => setCurrentView('phishing')} />;
+      case 'ceo-fraud-simulator':
+        return <CEOFraudPhishingSimulator onComplete={() => setCurrentView('phishing')} onExit={() => setCurrentView('phishing')} />;
       default:
-        return <LandingPage onNavigate={setCurrentView} />;
+        return <LandingPage onNavigate={handleNavigate} />;
     }
   };
 
@@ -58,14 +73,14 @@ function App() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <button
-                onClick={() => setCurrentView('landing')}
+                onClick={() => handleNavigate('landing')}
                 className="flex items-center space-x-3 text-blue-600 hover:text-blue-700 transition-all duration-200 group"
               >
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-200">
                   <Shield className="h-6 w-6 text-white" />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  CyberGuard Pro
+                  SecureMind
                 </span>
               </button>
             </div>
@@ -77,7 +92,7 @@ function App() {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setCurrentView(item.id as ViewType)}
+                    onClick={() => handleNavigate(item.id)}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 ${
                       currentView === item.id
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
@@ -110,13 +125,13 @@ function App() {
               {navigationItems.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setCurrentView(item.id as ViewType);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className={`flex items-center space-x-3 w-full px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                                      <button
+                      key={item.id}
+                      onClick={() => {
+                        handleNavigate(item.id);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`flex items-center space-x-3 w-full px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
                       currentView === item.id
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
                         : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'

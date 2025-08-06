@@ -3,9 +3,9 @@ import { Mail, Target, Users, Calendar, Play, Pause, BarChart3, Settings, Plus, 
 
 interface PhishingSimulationProps {
   onNavigate: (view: string) => void;
-}
-
-const PhishingSimulation: React.FC<PhishingSimulationProps> = ({ onNavigate }) => {
+}                                                                                           
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+  const PhishingSimulation: React.FC<PhishingSimulationProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState('campaigns');
   const [selectedTemplate, setSelectedTemplate] = useState('');
   const [isVisible, setIsVisible] = useState(false);
@@ -422,51 +422,141 @@ const PhishingSimulation: React.FC<PhishingSimulationProps> = ({ onNavigate }) =
         {activeTab === 'templates' && (
           <div className="space-y-8">
             <div className="flex justify-between items-center">
-              <h3 className="text-2xl font-bold text-gray-900">Email Templates</h3>
+              <h3 className="text-2xl font-bold text-gray-900">Phishing Simulator Modules</h3>
               <button className="btn-primary">
                 <Plus className="h-4 w-4 mr-2" />
                 Create Template
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {templates.map((template) => (
-                <div key={template.id} className="card-elevated p-6 group hover:scale-105 transition-all duration-300">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className={`px-3 py-2 rounded-2xl text-sm font-bold ${
-                      template.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
-                      template.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {template.difficulty}
-                    </span>
-                    <span className="text-sm text-gray-500 bg-gray-100 px-3 py-2 rounded-2xl font-medium">
-                      {template.category}
-                    </span>
+            {/* Interactive Simulator Modules */}
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-3xl border border-blue-200">
+              <h4 className="text-xl font-bold text-blue-900 mb-6 flex items-center">
+                <Target className="h-6 w-6 mr-3" />
+                Interactive Phishing Simulations
+              </h4>
+              <p className="text-blue-800 mb-8 leading-relaxed">
+                Test your phishing detection skills with these interactive simulations. Each module includes real-world scenarios, 
+                interactive exercises, and comprehensive feedback to improve your security awareness.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                  <div className="bg-gradient-to-r from-blue-500 to-indigo-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
+                    <Target className="h-6 w-6 text-white" />
                   </div>
-                  
-                  <h4 className="font-bold text-gray-900 mb-3 text-lg">{template.name}</h4>
-                  <p className="text-gray-600 mb-4 leading-relaxed">{template.description}</p>
-                  
-                  <div className="bg-gradient-to-r from-orange-50 to-red-50 p-4 rounded-2xl border-l-4 border-orange-400 mb-4">
-                    <p className="text-sm text-gray-700 italic">"{template.preview}"</p>
+                  <h5 className="font-bold text-gray-900 mb-2">Banking Phishing</h5>
+                  <p className="text-gray-600 mb-4 text-sm">Learn to identify and avoid banking-related phishing attacks</p>
+                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span>⏱️ 6 minutes</span>
+                    <span>📊 5 sections</span>
                   </div>
-                  
-                  <div className="flex justify-between text-sm text-gray-600 mb-6">
-                    <span>Click Rate: <strong className="text-orange-600">{template.clickRate}</strong></span>
-                    <span>Report Rate: <strong className="text-green-600">{template.reportRate}</strong></span>
-                  </div>
-                  
-                  <div className="flex space-x-3">
-                    <button className="flex-1 btn-primary">
-                      Use Template
-                    </button>
-                    <button className="px-4 py-3 border-2 border-gray-300 rounded-2xl hover:bg-gray-50 transition-all duration-200">
-                      <Eye className="h-4 w-4" />
-                    </button>
-                  </div>
+                  <button 
+                    onClick={() => onNavigate('banking-simulator')}
+                    className="w-full btn-primary text-sm"
+                  >
+                    Start Simulation
+                  </button>
                 </div>
-              ))}
+
+                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                  <div className="bg-gradient-to-r from-purple-500 to-violet-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
+                    <Settings className="h-6 w-6 text-white" />
+                  </div>
+                  <h5 className="font-bold text-gray-900 mb-2">IT Support Phishing</h5>
+                  <p className="text-gray-600 mb-4 text-sm">Detect fake IT support requests and phone scams</p>
+                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span>⏱️ 5 minutes</span>
+                    <span>📊 6 sections</span>
+                  </div>
+                  <button 
+                    onClick={() => onNavigate('it-support-simulator')}
+                    className="w-full btn-primary text-sm"
+                  >
+                    Start Simulation
+                  </button>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                  <div className="bg-gradient-to-r from-orange-500 to-yellow-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
+                    <Users className="h-6 w-6 text-white" />
+                  </div>
+                  <h5 className="font-bold text-gray-900 mb-2">Social Media Phishing</h5>
+                  <p className="text-gray-600 mb-4 text-sm">Protect yourself from social media scams and fake posts</p>
+                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span>⏱️ 5 minutes</span>
+                    <span>📊 6 sections</span>
+                  </div>
+                  <button 
+                    onClick={() => onNavigate('social-media-simulator')}
+                    className="w-full btn-primary text-sm"
+                  >
+                    Start Simulation
+                  </button>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                  <div className="bg-gradient-to-r from-red-500 to-pink-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
+                    <AlertTriangle className="h-6 w-6 text-white" />
+                  </div>
+                  <h5 className="font-bold text-gray-900 mb-2">CEO Fraud</h5>
+                  <p className="text-gray-600 mb-4 text-sm">Identify executive impersonation and business email compromise</p>
+                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <span>⏱️ 7 minutes</span>
+                    <span>📊 5 sections</span>
+                  </div>
+                  <button 
+                    onClick={() => onNavigate('ceo-fraud-simulator')}
+                    className="w-full btn-primary text-sm"
+                  >
+                    Start Simulation
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Templates Section */}
+            <div>
+              <h4 className="text-xl font-bold text-gray-900 mb-6">Email Templates</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {templates.map((template) => (
+                  <div key={template.id} className="card-elevated p-6 group hover:scale-105 transition-all duration-300">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className={`px-3 py-2 rounded-2xl text-sm font-bold ${
+                        template.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
+                        template.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {template.difficulty}
+                      </span>
+                      <span className="text-sm text-gray-500 bg-gray-100 px-3 py-2 rounded-2xl font-medium">
+                        {template.category}
+                      </span>
+                    </div>
+                    
+                    <h4 className="font-bold text-gray-900 mb-3 text-lg">{template.name}</h4>
+                    <p className="text-gray-600 mb-4 leading-relaxed">{template.description}</p>
+                    
+                    <div className="bg-gradient-to-r from-orange-50 to-red-50 p-4 rounded-2xl border-l-4 border-orange-400 mb-4">
+                      <p className="text-sm text-gray-700 italic">"{template.preview}"</p>
+                    </div>
+                    
+                    <div className="flex justify-between text-sm text-gray-600 mb-6">
+                      <span>Click Rate: <strong className="text-orange-600">{template.clickRate}</strong></span>
+                      <span>Report Rate: <strong className="text-green-600">{template.reportRate}</strong></span>
+                    </div>
+                    
+                    <div className="flex space-x-3">
+                      <button className="flex-1 btn-primary">
+                        Use Template
+                      </button>
+                      <button className="px-4 py-3 border-2 border-gray-300 rounded-2xl hover:bg-gray-50 transition-all duration-200">
+                        <Eye className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}

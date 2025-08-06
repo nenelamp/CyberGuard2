@@ -17,7 +17,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/auth/login", {
+    const response = await fetch("http://127.0.0.1:8001/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -61,7 +61,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   <Shield className="h-10 w-10 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold">CyberGuard Pro</h1>
+                  <h1 className="text-3xl font-bold">SecureMind</h1>
                   <p className="text-blue-100">Security Training Platform</p>
                 </div>
               </div>
@@ -106,7 +106,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <Shield className="h-8 w-8 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-              <p className="text-gray-600">Sign in to your CyberGuard Pro account</p>
+              <p className="text-gray-600">Sign in to your SecureMind account</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">

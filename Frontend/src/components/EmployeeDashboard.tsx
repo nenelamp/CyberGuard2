@@ -5,13 +5,53 @@ interface EmployeeDashboardProps {
   onNavigate: (view: string) => void;
 }
 
+interface UserProfile {
+  email: string;
+  full_name: string;
+  organization: string;
+  role: string;
+}
+
 const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isVisible, setIsVisible] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setIsVisible(true);
+    fetchUserProfile();
   }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch('http://127.0.0.1:8000/auth/me', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setUserProfile(userData);
+      } else {
+        console.error('Failed to fetch user profile');
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const userStats = {
     riskScore: 85,
@@ -72,7 +112,7 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({ onNavigate }) => 
     { rank: 1, name: 'Sarah Chen', score: 95, department: 'IT', avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face' },
     { rank: 2, name: 'Mike Johnson', score: 92, department: 'Sales', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face' },
     { rank: 3, name: 'Emma Davis', score: 89, department: 'HR', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face' },
-    { rank: 4, name: 'You', score: 85, department: 'Marketing', isCurrentUser: true, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face' },
+    { rank: 4, name: userProfile?.full_name || 'You', score: 85, department: userProfile?.organization || 'Marketing', isCurrentUser: true, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face' },
     { rank: 5, name: 'Tom Wilson', score: 83, department: 'Finance', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face' }
   ];
 
@@ -97,7 +137,9 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({ onNavigate }) => 
             <div className="relative">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome back, Alex! 👋</h1>
+                  <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                    Welcome back, {loading ? '...' : userProfile?.full_name || 'User'}! 👋
+                  </h1>
                   <p className="text-blue-100 text-lg">Keep up the great work on your cybersecurity journey</p>
                   <div className="flex items-center mt-4 space-x-6">
                     <div className="flex items-center">

@@ -13,3 +13,9 @@ class UserLogin(BaseModel):
 
 class UserOut(BaseModel):
     email: EmailStr
+
+class UserProfile(BaseModel):
+    email: EmailStr
+    full_name: str
+    organization: str
+    role: str
