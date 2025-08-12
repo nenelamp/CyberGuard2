@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Clock, BookOpen, CheckCircle, XCircle, ArrowRight, ArrowLeft, Award, Users, Phone, Mail, MessageSquare, AlertTriangle } from 'lucide-react';
 
 interface SocialEngineeringModuleProps {
-  onComplete: () => void;
+  onComplete: (score: number) => void;
   onExit: () => void;
 }
 
@@ -10,6 +10,7 @@ const SocialEngineeringModule: React.FC<SocialEngineeringModuleProps> = ({ onCom
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{[key: number]: string}>({});
   const [showResults, setShowResults] = useState(false);
+  const [answersLocked, setAnswersLocked] = useState(false);
 
   const trainingContent = {
     title: 'Social Engineering: Recognizing Human-Based Attacks',
@@ -143,7 +144,9 @@ const SocialEngineeringModule: React.FC<SocialEngineeringModuleProps> = ({ onCom
   };
 
   const handleAnswerSelect = (questionIndex: number, answer: string) => {
+    if (answersLocked) return;
     setSelectedAnswers({ ...selectedAnswers, [questionIndex]: answer });
+    setAnswersLocked(true);
   };
 
   const handleQuizSubmit = () => {
@@ -154,8 +157,48 @@ const SocialEngineeringModule: React.FC<SocialEngineeringModuleProps> = ({ onCom
     if (currentSlide < trainingContent.slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
       setShowResults(false);
+      setAnswersLocked(false);
     } else {
-      onComplete();
+      // Calculate score based on selected answers
+      let score = 0;
+      trainingContent.slides.forEach((slide, index) => {
+        if (slide.type === 'quiz' && selectedAnswers[index] !== undefined) {
+          if (parseInt(selectedAnswers[index]) === slide.correct) {
+            score += 1;
+          }
+        }
+        if (slide.type === 'scenario' && selectedAnswers[index] !== undefined) {
+          if (slide.choices?.[parseInt(selectedAnswers[index])]?.correct) {
+            score += 1;
+          }
+        }
+      });
+
+      // Send score to backend
+      const token = localStorage.getItem('access_token');
+      fetch('http://localhost:8000/api/training/scores', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          module_id: 'social-engineering',
+          module_title: 'Social Engineering: Recognizing Human-Based Attacks',
+          score: score,
+          max_score: 2,
+          answers: selectedAnswers
+        })
+      }).then(response => {
+        if (!response.ok) {
+          console.error('Failed to send score to backend');
+        }
+      }).catch(error => {
+        console.error('Error sending score to backend:', error);
+      });
+
+      // Pass score to parent component
+      onComplete(score);
     }
   };
 

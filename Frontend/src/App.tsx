@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Shield, Users, BookOpen, Target, BarChart3, Trophy, Settings, Menu, X } from 'lucide-react';
 import LandingPage from './components/LandingPage';
 import LoginPage from './components/LoginPage';
@@ -15,6 +15,36 @@ function App() {
   const [currentView, setCurrentView] = useState<ViewType>('landing');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      // Optionally decode token to get user role
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map(function(c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join('')
+        );
+        const payload = JSON.parse(jsonPayload);
+        // Example: set view based on role or default to employee
+        if (payload && payload.sub) {
+          // You can extend this to check roles if included in token
+          setCurrentView('employee');
+        } else {
+          setCurrentView('landing');
+        }
+      } catch (e) {
+        console.error('Failed to decode token', e);
+        setCurrentView('landing');
+      }
+    }
+  }, []);
+
   const navigationItems = [
     { id: 'employee', label: 'Employee Dashboard', icon: Users },
     // { id: 'admin', label: 'Admin Dashboard', icon: Settings },
@@ -24,25 +54,31 @@ function App() {
   ];
 
   const renderCurrentView = () => {
+    // Wrap setCurrentView to match onNavigate signature (view: string) => void
+    const handleNavigate = (view: string) => {
+      setCurrentView(view as ViewType);
+    };
+
     switch (currentView) {
       case 'landing':
-        return <LandingPage onNavigate={setCurrentView} />;
+        return <LandingPage onNavigate={handleNavigate} />;
       case 'login':
-        return <LoginPage onNavigate={setCurrentView} />;
+        return <LoginPage onNavigate={handleNavigate} />;
       case 'signup':
-        return <SignupPage onNavigate={setCurrentView} />;
+        return <SignupPage onNavigate={handleNavigate} />;
       case 'employee':
-        return <EmployeeDashboard onNavigate={setCurrentView} />;
+        return <EmployeeDashboard onNavigate={handleNavigate} />;
       case 'admin':
-        return <AdminDashboard onNavigate={setCurrentView} />;
+        return <AdminDashboard onNavigate={handleNavigate} />;
       case 'training':
-        return <TrainingModule onNavigate={setCurrentView} />;
+        // Pass userId prop as required by TrainingModuleProps
+        return <TrainingModule onNavigate={handleNavigate} userId="currentUser" />;
       case 'phishing':
-        return <PhishingSimulation onNavigate={setCurrentView} />;
+        return <PhishingSimulation onNavigate={handleNavigate} />;
       case 'risk':
-        return <RiskAssessment onNavigate={setCurrentView} />;
+        return <RiskAssessment onNavigate={handleNavigate} />;
       default:
-        return <LandingPage onNavigate={setCurrentView} />;
+        return <LandingPage onNavigate={handleNavigate} />;
     }
   };
 

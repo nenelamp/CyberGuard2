@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Clock, BookOpen, CheckCircle, XCircle, ArrowRight, ArrowLeft, Award, Shield, Smartphone, Key, Lock, QrCode } from 'lucide-react';
+import { Clock, BookOpen, CheckCircle, XCircle, ArrowRight, ArrowLeft, Shield, Smartphone, Key, QrCode } from 'lucide-react';
+import QuizComponent from './QuizComponent';
 
 interface MFAModuleProps {
-  onComplete: () => void;
+  onComplete: (score: number) => void;
   onExit: () => void;
 }
 
@@ -10,6 +11,7 @@ const MFAModule: React.FC<MFAModuleProps> = ({ onComplete, onExit }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{[key: number]: string}>({});
   const [showResults, setShowResults] = useState(false);
+  const [answersLocked, setAnswersLocked] = useState(false);
 
   const trainingContent = {
     title: 'Multi-Factor Authentication: Adding Extra Security Layers',
@@ -162,11 +164,10 @@ const MFAModule: React.FC<MFAModuleProps> = ({ onComplete, onExit }) => {
     ]
   };
 
-  const handleAnswerSelect = (questionIndex: number, answer: string) => {
+  const handleAnswerSelect = (questionIndex: number, answer: string, isCorrect: boolean) => {
+    if (answersLocked) return;
     setSelectedAnswers({ ...selectedAnswers, [questionIndex]: answer });
-  };
-
-  const handleQuizSubmit = () => {
+    setAnswersLocked(true);
     setShowResults(true);
   };
 
@@ -174,8 +175,47 @@ const MFAModule: React.FC<MFAModuleProps> = ({ onComplete, onExit }) => {
     if (currentSlide < trainingContent.slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
       setShowResults(false);
+      setAnswersLocked(false);
     } else {
-      onComplete();
+      // Calculate score based on selected answers
+      let score = 0;
+      trainingContent.slides.forEach((slide, index) => {
+        if (slide.type === 'quiz' && selectedAnswers[index] !== undefined) {
+          if (parseInt(selectedAnswers[index]) === slide.correct) {
+            score += 1;
+          }
+        }
+        if (slide.type === 'scenario' && selectedAnswers[index] !== undefined) {
+          if (slide.choices?.[parseInt(selectedAnswers[index])]?.correct) {
+            score += 1;
+          }
+        }
+      });
+      // Send score to backend
+      const token = localStorage.getItem('access_token');
+      fetch('http://localhost:8000/api/training/scores', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          module_id: 'mfa',
+          module_title: 'Multi-Factor Authentication: Adding Extra Security Layers',
+          score: score,
+          max_score: 2,
+          answers: selectedAnswers
+        })
+      }).then(response => {
+        if (!response.ok) {
+          console.error('Failed to send score to backend');
+        }
+      }).catch(error => {
+        console.error('Error sending score to backend:', error);
+      });
+
+      // Pass score to parent component
+      onComplete(score);
     }
   };
 
@@ -310,75 +350,16 @@ const MFAModule: React.FC<MFAModuleProps> = ({ onComplete, onExit }) => {
 
       case 'quiz':
         return (
-          <div className="space-y-8">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-3xl p-8">
-              <h4 className="font-bold text-blue-900 mb-4 text-lg flex items-center">
-                <Lock className="h-6 w-6 mr-3 text-blue-600" />
-                Security Assessment:
-              </h4>
-              <p className="text-blue-800 text-lg leading-relaxed">{slide.question}</p>
-            </div>
-            
-            <div className="space-y-4">
-              {slide.options?.map((option, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleAnswerSelect(currentSlide, index.toString())}
-                  className={`w-full text-left p-6 border-2 rounded-3xl transition-all duration-300 transform hover:scale-102 ${
-                    selectedAnswers[currentSlide] === index.toString()
-                      ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg'
-                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md'
-                  }`}
-                >
-                  <span className="flex items-center">
-                    <span className="bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl w-10 h-10 flex items-center justify-center text-lg font-bold mr-4">
-                      {String.fromCharCode(65 + index)}
-                    </span>
-                    <span className="text-lg">{option}</span>
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            {selectedAnswers[currentSlide] && !showResults && (
-              <button
-                onClick={handleQuizSubmit}
-                className="btn-primary text-lg"
-              >
-                Submit Answer
-              </button>
-            )}
-
-            {showResults && (
-              <div className={`p-6 rounded-3xl border-2 ${
-                parseInt(selectedAnswers[currentSlide]) === slide.correct
-                  ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200'
-                  : 'bg-gradient-to-br from-red-50 to-pink-50 border-red-200'
-              }`}>
-                <div className="flex items-center mb-4">
-                  {parseInt(selectedAnswers[currentSlide]) === slide.correct ? (
-                    <CheckCircle className="h-8 w-8 text-green-600 mr-3" />
-                  ) : (
-                    <XCircle className="h-8 w-8 text-red-600 mr-3" />
-                  )}
-                  <span className={`font-bold text-xl ${
-                    parseInt(selectedAnswers[currentSlide]) === slide.correct
-                      ? 'text-green-900'
-                      : 'text-red-900'
-                  }`}>
-                    {parseInt(selectedAnswers[currentSlide]) === slide.correct ? 'Excellent!' : 'Not quite right'}
-                  </span>
-                </div>
-                <p className={`text-lg leading-relaxed ${
-                  parseInt(selectedAnswers[currentSlide]) === slide.correct
-                    ? 'text-green-800'
-                    : 'text-red-800'
-                }`}>
-                  {slide.explanation}
-                </p>
-              </div>
-            )}
-          </div>
+          <QuizComponent
+            question={{
+              question: slide.question || '',
+              options: slide.options || [],
+              correct: slide.correct || 0,
+              explanation: slide.explanation || ''
+            }}
+            questionIndex={currentSlide}
+            onAnswerSelect={handleAnswerSelect}
+          />
         );
 
       case 'scenario':
@@ -397,7 +378,7 @@ const MFAModule: React.FC<MFAModuleProps> = ({ onComplete, onExit }) => {
               {slide.choices?.map((choice, index) => (
                 <button
                   key={index}
-                  onClick={() => handleAnswerSelect(currentSlide, index.toString())}
+                  onClick={() => handleAnswerSelect(currentSlide, index.toString(), !!(slide as any).correct && index === (slide as any).correct)}
                   className={`w-full text-left p-6 border-2 rounded-3xl transition-all duration-300 transform hover:scale-102 ${
                     selectedAnswers[currentSlide] === index.toString()
                       ? 'border-purple-500 bg-gradient-to-r from-purple-50 to-violet-50 shadow-lg'

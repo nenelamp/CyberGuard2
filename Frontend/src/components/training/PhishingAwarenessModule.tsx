@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Clock, BookOpen, CheckCircle, XCircle, ArrowRight, ArrowLeft, Award, Mail, AlertTriangle, Eye, Shield, Target, Link } from 'lucide-react';
 
 interface PhishingAwarenessModuleProps {
-  onComplete: () => void;
+  onComplete: (score: number, maxScore: number) => void;
   onExit: () => void;
 }
 
@@ -10,6 +10,7 @@ const PhishingAwarenessModule: React.FC<PhishingAwarenessModuleProps> = ({ onCom
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{[key: number]: string}>({});
   const [showResults, setShowResults] = useState(false);
+  const [answersLocked, setAnswersLocked] = useState(false);
 
   const trainingContent = {
     title: 'Phishing Awareness: Recognizing and Avoiding Email Threats',
@@ -213,7 +214,9 @@ const PhishingAwarenessModule: React.FC<PhishingAwarenessModuleProps> = ({ onCom
   };
 
   const handleAnswerSelect = (questionIndex: number, answer: string) => {
+    if (answersLocked) return;
     setSelectedAnswers({ ...selectedAnswers, [questionIndex]: answer });
+    setAnswersLocked(true);
   };
 
   const handleQuizSubmit = () => {
@@ -224,8 +227,27 @@ const PhishingAwarenessModule: React.FC<PhishingAwarenessModuleProps> = ({ onCom
     if (currentSlide < trainingContent.slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
       setShowResults(false);
+      setAnswersLocked(false);
     } else {
-      onComplete();
+      // Calculate score based on selected answers
+      let score = 0;
+      let maxScore = 0;
+      trainingContent.slides.forEach((slide, index) => {
+        if (slide.type === 'quiz') {
+          maxScore += 1;
+          if (selectedAnswers[index] !== undefined && parseInt(selectedAnswers[index]) === slide.correct) {
+            score += 1;
+          }
+        }
+        if (slide.type === 'scenario') {
+          maxScore += 1;
+          if (selectedAnswers[index] !== undefined && slide.choices?.[parseInt(selectedAnswers[index])]?.correct) {
+            score += 1;
+          }
+        }
+      });
+      // Pass score and maxScore to parent component
+      onComplete(score, maxScore);
     }
   };
 

@@ -30,8 +30,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log("Login successful", data);
-      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("access_token", data.access_token);
       alert("Login successful!");
       onNavigate("employee"); // Navigate to dashboard or wherever
     } else {
