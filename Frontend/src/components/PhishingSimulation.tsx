@@ -93,20 +93,20 @@ interface PhishingSimulationProps {
   ];
 
   const activeCampaigns = [
-    {
-      id: 1,
-      name: 'Q4 Security Assessment',
-      template: 'Banking Security Alert',
-      status: 'Active',
-      sent: 247,
-      opened: 198,
-      clicked: 45,
-      reported: 23,
-      startDate: '2024-01-15',
-      endDate: '2024-01-22',
-      progress: 65,
-      thumbnail: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=300&h=200&fit=crop'
-    },
+    // {
+    //   id: 1,
+    //   name: 'Q4 Security Assessment',
+    //   template: 'Banking Security Alert',
+    //   status: 'Active',
+    //   sent: 247,
+    //   opened: 198,
+    //   clicked: 45,
+    //   reported: 23,
+    //   startDate: '2024-01-15',
+    //   endDate: '2024-01-22',
+    //   progress: 65,
+    //   thumbnail: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=300&h=200&fit=crop'
+    // },
     {
       id: 2,
       name: 'Holiday Awareness Test',
@@ -181,7 +181,7 @@ interface PhishingSimulationProps {
                     </div>
                   </div>
                 </div>
-                <div className="flex space-x-3">
+                {/* <div className="flex space-x-3">
                   <button className="btn-secondary bg-white/20 border-white/30 text-white hover:bg-white/30">
                     <Download className="h-4 w-4 mr-2" />
                     Export Results
@@ -193,7 +193,7 @@ interface PhishingSimulationProps {
                     <Plus className="h-4 w-4 mr-2" />
                     New Campaign
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -205,8 +205,8 @@ interface PhishingSimulationProps {
             {[
               { id: 'campaigns', label: 'Active Campaigns', icon: Target },
               { id: 'templates', label: 'Email Templates', icon: Mail },
-              { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-              { id: 'create', label: 'Create Campaign', icon: Plus }
+              // { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+              // { id: 'create', label: 'Create Campaign', icon: Plus }
             ].map((tab) => {
               const Icon = tab.icon;
               return (
@@ -423,10 +423,10 @@ interface PhishingSimulationProps {
           <div className="space-y-8">
             <div className="flex justify-between items-center">
               <h3 className="text-2xl font-bold text-gray-900">Phishing Simulator Modules</h3>
-              <button className="btn-primary">
+              {/* <button className="btn-primary">
                 <Plus className="h-4 w-4 mr-2" />
                 Create Template
-              </button>
+              </button> */}
             </div>
 
             {/* Interactive Simulator Modules */}
@@ -516,7 +516,7 @@ interface PhishingSimulationProps {
             </div>
 
             {/* Email Templates Section */}
-            <div>
+            {/* <div>
               <h4 className="text-xl font-bold text-gray-900 mb-6">Email Templates</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {templates.map((template) => (
@@ -557,7 +557,7 @@ interface PhishingSimulationProps {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         )}
 

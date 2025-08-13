@@ -27,7 +27,7 @@ function App() {
     // { id: 'admin', label: 'Admin Dashboard', icon: Settings },
     { id: 'training', label: 'Training', icon: BookOpen },
     { id: 'phishing', label: 'Phishing Sim', icon: Target },
-    { id: 'risk', label: 'Risk Assessment', icon: BarChart3 },
+    // { id: 'risk', label: 'Risk Assessment', icon: BarChart3 },
   ];
 
   const renderCurrentView = () => {
