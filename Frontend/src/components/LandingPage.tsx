@@ -79,7 +79,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
     {
       name: 'Sarah Chen',
       role: 'CISO, TechCorp',
-      content: 'CyberGuard Pro transformed our security culture. Our phishing click rates dropped by 75% in just 3 months.',
+      content: 'SecureMind transformed our security culture. Our phishing click rates dropped by 75% in just 3 months.',
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=64&h=64&fit=crop&crop=face'
     },
     {
@@ -177,7 +177,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <Shield className="h-8 w-8 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                CyberGuard Pro
+                SecureMind
               </span>
             </div>
 
@@ -427,7 +427,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <span className="block text-blue-300">Human Firewall?</span>
             </h2>
             <p className="text-xl text-blue-100 mb-10 leading-relaxed">
-              Join thousands of organizations protecting themselves with CyberGuard Pro's advanced security training platform
+              Join thousands of organizations protecting themselves with SecureMind's advanced security training platform
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <button
@@ -457,7 +457,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-3 rounded-2xl">
                   <Shield className="h-6 w-6 text-white" />
                 </div>
-                <span className="text-xl font-bold">CyberGuard Pro</span>
+                <span className="text-xl font-bold">SecureMind</span>
               </div>
               <p className="text-gray-400 mb-6 leading-relaxed">
                 The leading cybersecurity awareness training platform trusted by thousands of organizations worldwide.
@@ -508,7 +508,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
               <div className="space-y-4">
                 <div className="flex items-center">
                   <Mail className="h-5 w-5 text-gray-400 mr-3" />
-                  <span className="text-gray-400">support@cyberguardpro.com</span>
+                  <span className="text-gray-400">support@securemind.com</span>
                 </div>
                 <div className="flex items-center">
                   <Phone className="h-5 w-5 text-gray-400 mr-3" />
@@ -527,7 +527,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
           <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © 2024 CyberGuard Pro. All rights reserved.
+              © 2024 SecureMind. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a>

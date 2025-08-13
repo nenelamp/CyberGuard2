@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Shield, Users, BookOpen, Target, BarChart3, Trophy, Settings, Menu, X } from 'lucide-react';
 import LandingPage from './components/LandingPage';
 import LoginPage from './components/LoginPage';
@@ -8,42 +8,19 @@ import AdminDashboard from './components/AdminDashboard';
 import TrainingModule from './components/TrainingModule';
 import PhishingSimulation from './components/PhishingSimulation';
 import RiskAssessment from './components/RiskAssessment';
+import { BankingPhishingSimulator, ITSupportPhishingSimulator, SocialMediaPhishingSimulator, CEOFraudPhishingSimulator } from './components/phishing-simulator';
 
-type ViewType = 'landing' | 'login' | 'signup' | 'employee' | 'admin' | 'training' | 'phishing' | 'risk';
+type ViewType = 'landing' | 'login' | 'signup' | 'employee' | 'admin' | 'training' | 'phishing' | 'risk' | 'banking-simulator' | 'it-support-simulator' | 'social-media-simulator' | 'ceo-fraud-simulator';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewType>('landing');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      // Optionally decode token to get user role
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(
-          atob(base64)
-            .split('')
-            .map(function(c) {
-              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            })
-            .join('')
-        );
-        const payload = JSON.parse(jsonPayload);
-        // Example: set view based on role or default to employee
-        if (payload && payload.sub) {
-          // You can extend this to check roles if included in token
-          setCurrentView('employee');
-        } else {
-          setCurrentView('landing');
-        }
-      } catch (e) {
-        console.error('Failed to decode token', e);
-        setCurrentView('landing');
-      }
+  const handleNavigate = (view: string) => {
+    if (view === 'landing' || view === 'login' || view === 'signup' || view === 'employee' || view === 'admin' || view === 'training' || view === 'phishing' || view === 'risk' || view === 'banking-simulator' || view === 'it-support-simulator' || view === 'social-media-simulator' || view === 'ceo-fraud-simulator') {
+      setCurrentView(view as ViewType);
     }
-  }, []);
+  };
 
   const navigationItems = [
     { id: 'employee', label: 'Employee Dashboard', icon: Users },
@@ -54,11 +31,6 @@ function App() {
   ];
 
   const renderCurrentView = () => {
-    // Wrap setCurrentView to match onNavigate signature (view: string) => void
-    const handleNavigate = (view: string) => {
-      setCurrentView(view as ViewType);
-    };
-
     switch (currentView) {
       case 'landing':
         return <LandingPage onNavigate={handleNavigate} />;
@@ -71,12 +43,19 @@ function App() {
       case 'admin':
         return <AdminDashboard onNavigate={handleNavigate} />;
       case 'training':
-        // Pass userId prop as required by TrainingModuleProps
-        return <TrainingModule onNavigate={handleNavigate} userId="currentUser" />;
+        return <TrainingModule onNavigate={handleNavigate} />;
       case 'phishing':
         return <PhishingSimulation onNavigate={handleNavigate} />;
       case 'risk':
         return <RiskAssessment onNavigate={handleNavigate} />;
+      case 'banking-simulator':
+        return <BankingPhishingSimulator onComplete={() => setCurrentView('phishing')} onExit={() => setCurrentView('phishing')} />;
+      case 'it-support-simulator':
+        return <ITSupportPhishingSimulator onComplete={() => setCurrentView('phishing')} onExit={() => setCurrentView('phishing')} />;
+      case 'social-media-simulator':
+        return <SocialMediaPhishingSimulator onComplete={() => setCurrentView('phishing')} onExit={() => setCurrentView('phishing')} />;
+      case 'ceo-fraud-simulator':
+        return <CEOFraudPhishingSimulator onComplete={() => setCurrentView('phishing')} onExit={() => setCurrentView('phishing')} />;
       default:
         return <LandingPage onNavigate={handleNavigate} />;
     }
@@ -94,14 +73,14 @@ function App() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <button
-                onClick={() => setCurrentView('landing')}
+                onClick={() => handleNavigate('landing')}
                 className="flex items-center space-x-3 text-blue-600 hover:text-blue-700 transition-all duration-200 group"
               >
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-200">
                   <Shield className="h-6 w-6 text-white" />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  CyberGuard Pro
+                  SecureMind
                 </span>
               </button>
             </div>
@@ -113,7 +92,7 @@ function App() {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setCurrentView(item.id as ViewType)}
+                    onClick={() => handleNavigate(item.id)}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 ${
                       currentView === item.id
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
@@ -146,13 +125,13 @@ function App() {
               {navigationItems.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setCurrentView(item.id as ViewType);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className={`flex items-center space-x-3 w-full px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                                      <button
+                      key={item.id}
+                      onClick={() => {
+                        handleNavigate(item.id);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`flex items-center space-x-3 w-full px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
                       currentView === item.id
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
                         : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
