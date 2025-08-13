@@ -62,6 +62,7 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({ onNavigate }) => 
   const [loadingDashboard, setLoadingDashboard] = useState(true);
   const [dashboardError, setDashboardError] = useState<string | null>(null);
   const [currentUserEmail, setCurrentUserEmail] = useState<string>('');
+  
 
   useEffect(() => {
     setIsVisible(true);
@@ -273,47 +274,50 @@ const badges = getBadges();
     ? leaderboard.find(entry => entry.isCurrentUser)?.rank ?? leaderboard.length + 1
     : 0;
   const totalUsers = Math.max(leaderboard.length, 1);
+  const currentUserLeaderboardScore = leaderboard.find(entry => entry.isCurrentUser)?.score ?? securityScore;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Header */}
-        <div className={`mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
-            <div className="relative">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome back, {currentUserEmail.split('@')[0]}! 👋</h1>
-                  <p className="text-blue-100 text-lg">Keep up the great work on your cybersecurity journey</p>
-                  <div className="flex items-center mt-4 space-x-6">
-                    <div className="flex items-center">
-                      <Zap className="h-5 w-5 mr-2 text-yellow-300" />
-                      <span className="font-medium">{userDashboard?.summary.completed_modules || 0} modules completed</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Star className="h-5 w-5 mr-2 text-yellow-300" />
-                      <span className="font-medium">Avg: {userDashboard?.summary.average_score || 0}%</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="hidden md:block">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center">
-                    <div className="text-3xl font-bold mb-1">{securityScore}</div>
-                    <div className="text-sm text-blue-100">Security Score</div>
-                  </div>
-                </div>
-              </div>
+        {/* Welcome Header */}
+<div className={`mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 text-white relative overflow-hidden">
+    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+    <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+    <div className="relative">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome back, {currentUserEmail.split('@')[0]}! 👋</h1>
+          <p className="text-blue-100 text-lg">Keep up the great work on your cybersecurity journey</p>
+          <div className="flex items-center mt-4 space-x-6">
+            <div className="flex items-center">
+              <Zap className="h-5 w-5 mr-2 text-yellow-300" />
+              <span className="font-medium">{userDashboard?.summary.completed_modules || 0} modules completed</span>
+            </div>
+            <div className="flex items-center">
+              <Star className="h-5 w-5 mr-2 text-yellow-300" />
+              <span className="font-medium">Avg: {userDashboard?.summary.average_score || 0}%</span>
             </div>
           </div>
         </div>
+        <div className="hidden md:block">
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center">
+            <div className="text-3xl font-bold mb-1">{leaderboard.find(entry => entry.isCurrentUser)?.score ?? securityScore}</div>
+            <div className="text-sm text-blue-100">Security Score</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
         {/* Quick Stats */}
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {[{
             title: 'Security Score',
-            value: securityScore,
+            value: currentUserLeaderboardScore,
             change: `${userDashboard?.summary.average_score || 0}% avg score`,
             icon: TrendingUp,
             color: 'from-emerald-500 to-green-500',

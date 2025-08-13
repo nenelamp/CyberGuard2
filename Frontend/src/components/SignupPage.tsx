@@ -28,11 +28,11 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   const payload = {
+    full_name: `${formData.firstName} ${formData.lastName}`,
     email: formData.email,
     password: formData.password,
-    full_name: `${formData.firstName} ${formData.lastName}`,
-    organization: formData.company,
     role: "employee", // or "admin", depending on UI logic
+    organization: formData.company,
   };
 
   try {

@@ -5,6 +5,7 @@ from app.models.user import UserCreate, UserLogin, UserOut
 from app.database import db
 from app.utils.security import hash_password, verify_password, create_access_token, SECRET_KEY, ALGORITHM
 from datetime import timedelta
+import datetime
 from jose import JWTError, jwt
 from pydantic import ValidationError
 
@@ -47,11 +48,12 @@ async def register(user: UserCreate):
 
     hashed_pw = hash_password(user.password)
     await db.users.insert_one({
+        "full_name": user.full_name,
         "email": user.email,
         "password": hashed_pw,
-        "full_name": user.full_name,
+        "role": user.role,
         "organization": user.organization,
-        "role": user.role
+        "created_at": datetime.datetime.utcnow()
     })
     return {"email": user.email}
 
