@@ -45,10 +45,9 @@ const handleSubmit = async (e: React.FormEvent) => {
     });
 
     if (response.ok) {
-      const data = await response.json();
-      console.log("Signup successful", data);
+      localStorage.removeItem("access_token"); 
       alert("Account created successfully!");
-      onNavigate("employee"); // or redirect to login
+      onNavigate("login");
     } else {
       const errorData = await response.json();
       console.error("Signup failed", errorData);

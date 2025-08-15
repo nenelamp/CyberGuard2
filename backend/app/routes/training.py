@@ -261,6 +261,13 @@ async def get_user_training_dashboard(current_user: dict = Security(get_current_
             "last_activity": None
         }
         
+        # Handle None values in average_score
+        avg_score = summary.get("average_score")
+        if avg_score is None:
+            avg_score = 0.0
+        else:
+            avg_score = float(avg_score)
+        
         return {
             "user_id": current_user["email"],
             "summary": {
@@ -268,7 +275,7 @@ async def get_user_training_dashboard(current_user: dict = Security(get_current_
                 "completed_modules": summary.get("completed_modules", 0),
                 "in_progress_modules": summary.get("in_progress_modules", 0),
                 "not_started_modules": summary.get("not_started_modules", 0),
-                "average_score": round(summary.get("average_score", 0.0), 2),
+                "average_score": round(avg_score, 2),
                 "total_time_spent": summary.get("total_time_spent", 0),
                 "last_activity": summary.get("last_activity")
             },

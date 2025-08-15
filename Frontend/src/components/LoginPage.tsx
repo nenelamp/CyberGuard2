@@ -32,15 +32,13 @@ const handleSubmit = async (e: React.FormEvent) => {
       const data = await response.json();
       localStorage.setItem("access_token", data.access_token);
       alert("Login successful!");
-      onNavigate("employee"); // Navigate to dashboard or wherever
+      onNavigate("employee");
     } else {
       const errorData = await response.json();
-      console.error("Login failed", errorData);
       alert(`Login failed: ${errorData.detail || "Unknown error"}`);
     }
 
   } catch (err) {
-    console.error("Network or unexpected error:", err);
     alert("Something went wrong. Please try again.");
   }
 };

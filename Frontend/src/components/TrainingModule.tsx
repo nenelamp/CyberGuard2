@@ -425,8 +425,6 @@ const TrainingModule: React.FC<TrainingModuleProps> = ({ onNavigate, userId }) =
           })
     : [];
 
-  console.log('Filtered recent scores to show:', filteredRecentScores);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
