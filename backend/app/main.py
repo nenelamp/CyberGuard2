@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import auth_router, training_router
+import os
+import uvicorn
 
 app = FastAPI()
 
@@ -27,3 +29,7 @@ app.include_router(training_router, prefix="/api/training", tags=["Training"])
 @app.get("/")
 async def root():
     return {"message": "Welcome to SecureMind API"}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=False)
