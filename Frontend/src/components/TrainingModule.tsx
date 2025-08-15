@@ -55,7 +55,7 @@ const TrainingModule: React.FC<TrainingModuleProps> = ({ onNavigate, userId }) =
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const API_BASE_URL = 'http://localhost:8000/api/training';
+  const API_BASE_URL = 'https://securemind-backend.onrender.com/api/training';
 
   const trainingModules = [
     {

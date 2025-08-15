@@ -171,7 +171,7 @@ const PasswordSecurityModule: React.FC<PasswordSecurityModuleProps> = ({ onCompl
       });
       // Send score to backend
       const token = localStorage.getItem('access_token');
-      fetch('http://localhost:8000/api/training/scores', {
+      fetch('https://securemind-backend.onrender.com/api/training/scores', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
